@@ -25,5 +25,5 @@ jobs:
         uses: leafo/gh-actions-lua@v10
 
       - name: Run tests
-        run: ./tests/main.lua
+        run: lua ./tests/main.lua
 
