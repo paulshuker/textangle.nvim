@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  run-tests:
+    strategy:
+      # Do not fail fast, so we can see all errors from the unit/integration tests
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+    name: Tests
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup lua
+        uses: ilammy/msvc-dev-cmd@v1
+        uses: leafo/gh-actions-lua@v10
+
+      - name: Run tests
+        run: ./tests/main.lua
+
