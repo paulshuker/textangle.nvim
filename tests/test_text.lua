@@ -1,5 +1,3 @@
-jit.off() -- Disable JIT compilation
-
 ---@class text
 text = require("lua.textangle.text")
 
