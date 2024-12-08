@@ -5,6 +5,9 @@ local M = {}
 
 local OPTION_DEFAULTS = {
    line_width = 88,
+   hyphenate = true,
+   hyphenate_minimum_gap = 10,
+   hyphenate_overflow = true,
 }
 
 function M.is_valid_option_name(opt_name)
