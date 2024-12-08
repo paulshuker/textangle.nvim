@@ -1,4 +1,4 @@
--- @class text
+---@class text
 local M = {}
 
 --- Split the given text up with hyphens.
@@ -55,25 +55,27 @@ function M.hyphenise(input, max_width, first_width)
 end
 
 --- Format the given text into fixed-width paragraphs.
--- @param input table An array of input text. Each item in the table is a line.
--- @param opts table A table of options to format text with. Contains:
---   line_length [opt=88] integer. The maximum width of each line.
---   hyphenate [opt=true] boolean. Allow hyphenation of long words. See hyphenate_minimum_gap.
---   hyphenate_minimum_gap [opt=10] integer. If hyphenate is true and the gap left by moving the
---      next word over to the next line is greater than hyphenate_minimum_gap, then the word is
---      hyphenated to reach line_length. If hyphenate is true and this is 0, then every word is
---      always hyphenated to reach exactly line_length widths.
---   hyphenate_overflow [opt=true] boolean. Hyphenate a word if the word is greater than the
---      line_length. If false, then the line will be forced to exceed the line_length.
--- @return table formatted_text. Formatted text. Each value in the array is a line of text.
-function M.format(input, opts)
+---@param input table An array of input text. Each item in the table is a line.
+---@param line_length integer[opt=88]. The maximum width of each line.
+---@param hyphenate boolean[opt=true]. Allow hyphenation of long words. See hyphenate_minimum_gap.
+---@param hyphenate_minimum_gap integer[opt=10]. If hyphenate is true and the gap left by moving
+---   the next word over to the next line is greater than hyphenate_minimum_gap, then the word is
+---   hyphenated to reach line_length. If hyphenate is true and this is 0, then every word is always
+---   hyphenated to reach exactly line_length widths.
+---@param hyphenate_overflow boolean[opt=true]. Hyphenate a word if the word is greater than the
+---   line_length. If false, then the line will be forced to exceed the line_length.
+---@return table formatted_text. Formatted text. Each value in the array is a line of text.
+function M.format(input, line_length, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
    assert(type(input) == "table")
    assert(#input > 0)
-   assert(type(opts) == "table")
-   opts.line_length = opts.line_length or 88
-   opts.hyphenate = opts.hyphenate or true
-   opts.hyphenate_minimum_gap = opts.hyphenate_minimum_gap or 10
-   opts.hyphenate_overflow = opts.hyphenate_overflow or true
+   line_length = line_length or 88
+   hyphenate = hyphenate == nil and true or hyphenate
+   hyphenate_minimum_gap = hyphenate_minimum_gap or 10
+   hyphenate_overflow = hyphenate_overflow == nil and true or hyphenate_overflow
+   assert(type(line_length) == "number")
+   assert(type(hyphenate) == "boolean")
+   assert(type(hyphenate_minimum_gap) == "number")
+   assert(type(hyphenate_overflow) == "boolean")
    -- TODO: Support "persistent suffix" options for things like repeated single-line comments.
 
    -- First, unravel the given text into a single string.
@@ -100,12 +102,12 @@ function M.format(input, opts)
    for word in string.gmatch(unravelled_text, "%a+") do
       -- Check for edge cases first.
       if
-         opts.hyphenate
-         and (#word + #new_line) > opts.line_length
-         and (opts.line_length - #new_line) >= opts.hyphenate_minimum_gap
+         hyphenate
+         and (#word + #new_line) > line_length
+         and (line_length - #new_line) >= hyphenate_minimum_gap
       then
          -- Hyphenate the word.
-         local hyphened_word = M.hyphenise(word, opts.line_length, opts.line_length - #new_line)
+         local hyphened_word = M.hyphenise(word, line_length, line_length - #new_line)
          table.insert(formatted_text, new_line .. hyphened_word[1])
          for i = 2, #hyphened_word - 1 do
             table.insert(formatted_text, hyphened_word[i])
@@ -114,9 +116,9 @@ function M.format(input, opts)
          goto continue
       end
 
-      if opts.hyphenate_overflow and new_line == "" and #word > opts.line_length then
+      if hyphenate_overflow and new_line == "" and #word > line_length then
          -- Split the word up between lines using a hyphen.
-         local hyphened_word = M.hyphenise(word, opts.line_length)
+         local hyphened_word = M.hyphenise(word, line_length)
          for i = 1, #hyphened_word - 1 do
             table.insert(formatted_text, hyphened_word[i])
          end
@@ -131,7 +133,7 @@ function M.format(input, opts)
       end
 
       local length_required = #word + #new_line + 1
-      if length_required <= opts.line_length then
+      if length_required <= line_length then
          new_line = new_line .. " " .. word
       else
          table.insert(formatted_text, new_line)

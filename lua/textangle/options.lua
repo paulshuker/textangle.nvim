@@ -1,6 +1,6 @@
 local api = vim.api
 
--- @class options
+---@class options
 local M = {}
 
 local OPTION_TYPES = {

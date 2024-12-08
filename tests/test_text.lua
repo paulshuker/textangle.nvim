@@ -1,7 +1,7 @@
--- @class text
+---@class text
 local text = require("lua.textangle.text")
 
--- @class test_text
+---@class test_text
 local M = {}
 
 local function test_hyphenise()
@@ -62,30 +62,37 @@ end
 
 local function test_format()
    local input = { "" }
-   local opts =
-      { line_length = 5, hyphenate = false, hyphenate_minimum_gap = 10, hyphenate_overflow = false }
+   local line_length = 5
+   local hyphenate = false
+   local hyphenate_minimum_gap = 10
+   local hyphenate_overflow = false
    -- Empty input checks.
-   local formatted_text = text.format(input, opts)
+   local formatted_text =
+      text.format(input, line_length, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
    assert(#formatted_text == 1, "Got length " .. #formatted_text)
    assert(type(formatted_text[1]) == "string")
    assert(formatted_text[1] == "")
    input = { "", "   ", "" }
-   formatted_text = text.format(input, opts)
+   formatted_text =
+      text.format(input, line_length, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
    assert(#formatted_text == 1)
    assert(type(formatted_text[1]) == "string")
    assert(formatted_text[1] == "")
 
    input = { "Thisisoneverylongword", "some more words" }
-   formatted_text = text.format(input, opts)
-   -- assert(#formatted_text == 4, "Got length " .. #formatted_text)
+   formatted_text =
+      text.format(input, line_length, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
+   assert(#formatted_text == 4, "Got length " .. #formatted_text)
    assert(formatted_text[1] == "Thisisoneverylongword", "Got " .. formatted_text[1])
    assert(formatted_text[2] == "some")
    assert(formatted_text[3] == "more")
    assert(formatted_text[4] == "words")
 
    -- Check hyphenate overflow.
-   opts.hyphenate_overflow = true
-   formatted_text = text.format(input, opts)
+   line_length = 5
+   hyphenate_overflow = true
+   formatted_text =
+      text.format(input, line_length, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
    assert(#formatted_text == 8)
    assert(formatted_text[1] == "This-")
    assert(formatted_text[2] == "ison-")
@@ -95,8 +102,9 @@ local function test_format()
    assert(formatted_text[6] == "some")
    assert(formatted_text[7] == "more")
    assert(formatted_text[8] == "words")
-   opts.line_length = 18
-   formatted_text = text.format(input, opts)
+   line_length = 18
+   formatted_text =
+      text.format(input, line_length, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
    assert(#formatted_text == 3)
    assert(formatted_text[1] == "Thisisoneverylong-")
    assert(formatted_text[2] == "word some more")
