@@ -1,12 +1,13 @@
----@class text
+-- @class text
 local M = {}
 
+--- Split the given text up with hyphens.
 -- Place hyphens in the given string so it can be split between lines and respect the maximum width
 -- for each line.
---- @param input string String to add hyphens to.
---- @param max_width integer Maximum width of each line.
---- @param first_width integer? Maximum width for the first line. Default: same as max_width.
---- @return table hyphen_input. An array of lines where the given input is split using hyphens.
+-- @param input string String to add hyphens to.
+-- @param max_width integer Maximum width of each line.
+-- @param first_width integer? Maximum width for the first line. Default: same as max_width.
+-- @return table hyphen_input. An array of lines where the given input is split using hyphens.
 function M.hyphenise(input, max_width, first_width)
    first_width = first_width or max_width
 
@@ -53,18 +54,18 @@ function M.hyphenise(input, max_width, first_width)
    return output
 end
 
--- Format the given text into fixed-width paragraphs.
----@param input table An array of input text. Each item in the table is a line.
----@param opts table A table of options to format text with. Contains:
----   line_length [opt=88] integer. The maximum width of each line.
----   hyphenate [opt=true] boolean. Allow hyphenation of long words. See hyphenate_minimum_gap.
----   hyphenate_minimum_gap [opt=10] integer. If hyphenate is true and the gap left by moving the
----      next word over to the next line is greater than hyphenate_minimum_gap, then the word is
----      hyphenated to reach line_length. If hyphenate is true and this is 0, then every word is
----      always hyphenated to reach exactly line_length widths.
----   hyphenate_overflow [opt=true] boolean. Hyphenate a word if the word is greater than the
----      line_length. If false, then the line will be forced to exceed the line_length.
----@return table formatted_text. Formatted text. Each value in the array is a line of text.
+--- Format the given text into fixed-width paragraphs.
+-- @param input table An array of input text. Each item in the table is a line.
+-- @param opts table A table of options to format text with. Contains:
+--   line_length [opt=88] integer. The maximum width of each line.
+--   hyphenate [opt=true] boolean. Allow hyphenation of long words. See hyphenate_minimum_gap.
+--   hyphenate_minimum_gap [opt=10] integer. If hyphenate is true and the gap left by moving the
+--      next word over to the next line is greater than hyphenate_minimum_gap, then the word is
+--      hyphenated to reach line_length. If hyphenate is true and this is 0, then every word is
+--      always hyphenated to reach exactly line_length widths.
+--   hyphenate_overflow [opt=true] boolean. Hyphenate a word if the word is greater than the
+--      line_length. If false, then the line will be forced to exceed the line_length.
+-- @return table formatted_text. Formatted text. Each value in the array is a line of text.
 function M.format(input, opts)
    assert(type(input) == "table")
    assert(#input > 0)

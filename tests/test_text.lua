@@ -1,7 +1,7 @@
----@class text
-text = require("lua.textangle.text")
+-- @class text
+local text = require("lua.textangle.text")
 
----@class test_text
+-- @class test_text
 local M = {}
 
 local function test_hyphenise()
