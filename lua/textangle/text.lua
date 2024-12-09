@@ -72,7 +72,8 @@ function M.format(input, line_width, hyphenate, hyphenate_minimum_gap, hyphenate
    assert(type(hyphenate) == "boolean")
    assert(type(hyphenate_minimum_gap) == "number")
    assert(type(hyphenate_overflow) == "boolean")
-   -- TODO: Support "persistent suffix" options for things like repeated single-line comments.
+   -- TODO: Support "persistent_suffixes" option for things like repeated single-line code comments.
+   -- TODO: Support "respect_indent" option so a formatted line remained indented.
 
    -- First, unravel the given text into a single string.
    -- Every word is separated by a single space.
