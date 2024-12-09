@@ -1,5 +1,5 @@
 -- Call to run all tests.
-local TESTS = { "test_text" }
+local TESTS = { "test_checker", "test_text" }
 
 print("Running " .. #TESTS .. " Test(s)")
 

@@ -12,7 +12,7 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     name: Tests
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: 5
 
     steps:
       - name: Checkout code
