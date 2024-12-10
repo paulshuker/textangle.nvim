@@ -1,5 +1,7 @@
 ---@class test_text
-local M = {} ---@class Text
+local M = {}
+
+---@class Text
 local text = require("lua.textangle.text")
 
 local function test_unravel_lines()

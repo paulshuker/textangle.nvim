@@ -50,13 +50,14 @@ Within the curly brackets, default options can be overwritten. The default optio
 {
    -- The maximum allowed width of each line.
    line_width = 100,
-   -- Allow words to be hyphenated. A word will be hyphenated if placing the entire word on the next
-   -- line leaves a whitespace greater than hyphenate_minimum_gap. The hyphen is placed at the end
-   -- of lines.
+   -- Allow words to be hyphenated. A word will be hyphenated if placing the entire word
+   -- on the next line leaves a whitespace greater than hyphenate_minimum_gap. The hyphen
+   -- is placed at the end of lines.
    hyphenate = true,
    -- See hyphenate.
    hyphenate_minimum_gap = 10,
-   -- If a word is longer than line_width, hyphenate it. If false, very large words could overflow.
+   -- If a word is longer than line_width, hyphenate it. If false, large words could
+   -- overflow.
    hyphenate_overflow = true,
    -- When disabled, textangle will silently do nothing if called.
    disable = false,
@@ -66,11 +67,11 @@ Within the curly brackets, default options can be overwritten. The default optio
 ## Advanced Configuration
 
 You can call setup multiple times. Each time it is called, all previous options are forgotten. This
-way you can change the paragraph settings at any time in a `.lua` file.
+way you can change the paragraph settings at any time.
 
 ### Change with file type
 
-You can have different options depending on the programming language. For example,
+You can have different options depending on the file. For example,
 
 ```lua
 -- Python files.
@@ -80,7 +81,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 })
 -- Text and lua files.
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
-   pattern = { "*.txt", ".lua" },
+   pattern = { "*.txt", "*.lua" },
    command = "lua require('textangle').setup({ line_width = 100 })",
 })
 -- Do not format csv files.
