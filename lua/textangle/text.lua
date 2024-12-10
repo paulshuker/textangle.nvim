@@ -1,6 +1,32 @@
 ---@class Text
 local M = {}
 
+---Unravel lines of text into one string.
+-- All lines of text are appended together, preserving their order in the input array. Each phrase
+-- is separated by a single whitespace.
+---@param input string[] Lines of text.
+---@return string output Unravelled text.
+function M.unravel_lines(input)
+   local output = ""
+   local first_line = true
+
+   for _, input_line in ipairs(input) do
+      assert(type(input_line) == "string")
+
+      if not first_line then
+         output = output .. " "
+      end
+      -- Remove tabs.
+      output = output .. string.gsub(input_line, "\t", " ")
+      first_line = false
+   end
+
+   -- Remove large whitespace in favour of a single whitespace.
+   output = string.gsub(output, "%s+", " ")
+
+   return output
+end
+
 ---Split the given text up with hyphens.
 -- Place hyphens in the given string so it can be split between lines and respect the maximum width
 -- for each line.
@@ -77,21 +103,7 @@ function M.format(input, line_width, hyphenate, hyphenate_minimum_gap, hyphenate
 
    -- First, unravel the given text into a single string.
    -- Every word is separated by a single space.
-   local unravelled_text = ""
-   local first_word = false
-
-   for _, text_line in ipairs(input) do
-      assert(type(text_line) == "string")
-
-      for word in string.gmatch(text_line, "%S+") do
-         if not first_word then
-            unravelled_text = unravelled_text .. " "
-         end
-
-         unravelled_text = unravelled_text .. word
-         first_word = false
-      end
-   end
+   local unravelled_text = M.unravel_lines(input)
 
    -- Now order the text contents into separate lines.
    local formatted_text = {}

@@ -6,12 +6,14 @@ M.OPTION_TYPES = {
    hyphenate = "boolean",
    hyphenate_minimum_gap = "number",
    hyphenate_overflow = "boolean",
+   disable = "boolean",
 }
 M.OPTION_DEFAULTS = {
-   line_width = 88,
+   line_width = 100,
    hyphenate = true,
    hyphenate_minimum_gap = 10,
    hyphenate_overflow = true,
+   disable = false,
 }
 
 ---Is a valid option name.

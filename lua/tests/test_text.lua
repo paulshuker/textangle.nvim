@@ -1,8 +1,21 @@
 ---@class test_text
-local M = {}
-
----@class Text
+local M = {} ---@class Text
 local text = require("textangle.text")
+
+local function test_unravel_lines()
+   local input = nil
+   local output = nil
+
+   input = { "Some words!", "", "", "and some more words" }
+   output = text.unravel_lines(input)
+   assert(type(output) == "string")
+   assert(output == "Some words! and some more words", "Got " .. output)
+
+   input = { "Some\twords!", "", "", "and some more words" }
+   output = text.unravel_lines(input)
+   assert(type(output) == "string")
+   assert(output == "Some words! and some more words", "Got " .. output)
+end
 
 local function test_hyphenise()
    -- Empty input check.
@@ -112,6 +125,7 @@ local function test_format()
 end
 
 function M.run()
+   test_unravel_lines()
    test_hyphenise()
    test_format()
 end

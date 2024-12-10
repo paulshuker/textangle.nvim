@@ -8,7 +8,7 @@ Works well out-the-box with plain text.
 
 ## Install
 
-On [lazy.nvim](https://github.com/folke/lazy.nvim)
+Using [lazy.nvim](https://github.com/folke/lazy.nvim),
 
 ```lua
 {
@@ -18,37 +18,55 @@ On [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ## Usage
 
-Convert the text on the cursor's line into a paragraph by typing `:TextangleLine`.
-
-## Configuration
-
 In `init.lua`, setup textangle.
 
 ```lua
 require("textangle").setup({})
 ```
 
+Then, format text on the cursor's line by typing `:TextangleLine`. You can also keymap it. For
+example, to `gl`:
+
+```lua
+vim.api.nvim_set_keymap("n", "gl", "<cmd>TextangleLine<CR>", { noremap = true })
+```
+
+You can format text using visual line mode, like by typing `gk`:
+
+```lua
+vim.api.nvim_set_keymap(
+  "x",
+  "gk",
+  "<cmd>lua require('textangle').format_visual_line()<CR>",
+  { noremap = true }
+)
+```
+
+## Configuration
+
 Within the curly brackets, default options can be overwritten. The default options are:
 
 ```lua
 {
    -- The maximum allowed width of each line.
-   line_width = 88,
+   line_width = 100,
    -- Allow words to be hyphenated. A word will be hyphenated if placing the entire word on the next
    -- line leaves a whitespace greater than hyphenate_minimum_gap. The hyphen is placed at the end
    -- of lines.
    hyphenate = true,
    -- See hyphenate.
    hyphenate_minimum_gap = 10,
-   -- If a word is longer than line_width, hyphenate it. If false, lines could overflow line_width.
+   -- If a word is longer than line_width, hyphenate it. If false, very large words could overflow.
    hyphenate_overflow = true,
+   -- When disabled, textangle will silently do nothing if called.
+   disable = false,
 }
 ```
 
 ## Advanced Configuration
 
 You can call textangle setup multiple times. Each time it is called, all previous options are
-forgotten. This way you can change the paragraph settings at any time in `.lua` configuration files.
+forgotten. This way you can change the paragraph settings at any time in a `.lua` file.
 
 ### Change with file type
 
@@ -65,8 +83,19 @@ vim.api.nvim_create_autocmd({"BufEnter"}, {
    pattern = {"*.txt", ".lua"},
    command = "lua require('textangle').setup({line_width = 100})",
 })
+-- Do not format csv files.
+vim.api.nvim_create_autocmd({"BufEnter"}, {
+   pattern = {"*.csv"},
+   command = "lua require('textangle').setup({disable = true})",
+})
 -- Add more file types here.
 ```
 
 See [neovim](https://neovim.io/doc/user/autocmd.html) for more details on auto commands.
+
+### "What is a word?"
+
+Words are simply a series of letters/symbols given to textangle. If there were spaces, tabs or a new
+line in between the letters/symbols, then it would be considered two separate words. Hyphens already
+placed by the user in text are preserved by textangle.
 
