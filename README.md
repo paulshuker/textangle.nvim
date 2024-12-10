@@ -65,8 +65,8 @@ Within the curly brackets, default options can be overwritten. The default optio
 
 ## Advanced Configuration
 
-You can call textangle setup multiple times. Each time it is called, all previous options are
-forgotten. This way you can change the paragraph settings at any time in a `.lua` file.
+You can call setup multiple times. Each time it is called, all previous options are forgotten. This
+way you can change the paragraph settings at any time in a `.lua` file.
 
 ### Change with file type
 
@@ -74,28 +74,29 @@ You can have different options depending on the programming language. For exampl
 
 ```lua
 -- Python files.
-vim.api.nvim_create_autocmd({"BufEnter"}, {
-   pattern = {"*.py"},
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+   pattern = { "*.py" },
    command = "lua require('textangle').setup({ line_width = 120, hyphenate = false })",
 })
 -- Text and lua files.
-vim.api.nvim_create_autocmd({"BufEnter"}, {
-   pattern = {"*.txt", ".lua"},
-   command = "lua require('textangle').setup({line_width = 100})",
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+   pattern = { "*.txt", ".lua" },
+   command = "lua require('textangle').setup({ line_width = 100 })",
 })
 -- Do not format csv files.
-vim.api.nvim_create_autocmd({"BufEnter"}, {
-   pattern = {"*.csv"},
-   command = "lua require('textangle').setup({disable = true})",
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+   pattern = { "*.csv" },
+   command = "lua require('textangle').setup({ disable = true })",
 })
 -- Add more file types here.
 ```
 
-See [neovim](https://neovim.io/doc/user/autocmd.html) for more details on auto commands.
+See [neovim](https://neovim.io/doc/user/autocmd.html) for more details on auto commands, like
+changing formatting based on the file's full path.
 
 ### "What is a word?"
 
 Words are simply a series of letters/symbols given to textangle. If there were spaces, tabs or a new
 line in between the letters/symbols, then it would be considered two separate words. Hyphens already
-placed by the user in text are preserved by textangle.
+placed by the user in text are preserved.
 
