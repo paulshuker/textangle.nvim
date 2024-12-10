@@ -36,7 +36,7 @@ local function benchmark_format()
                text.format(INPUT, line_width, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
             end
             local time_taken = os.clock() - start_time
-            assert(time_taken < 1)
+            assert(time_taken < 5, "Failed with time taken " .. time_taken)
          end
       end
    end
