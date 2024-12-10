@@ -2,7 +2,7 @@
 local M = {}
 
 ---@class Text
-local text = require("lua.textangle.text")
+local text = require("textangle.text")
 
 local function test_hyphenise()
    -- Empty input check.
