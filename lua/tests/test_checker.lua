@@ -2,7 +2,7 @@
 local M = {}
 
 ---@class Checker
-local checker = require("textangle.checker")
+local checker = require("lua.textangle.checker")
 
 local function test_is_valid_option_name()
    assert(not checker.is_valid_option_name(""))
