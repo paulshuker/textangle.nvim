@@ -4,6 +4,30 @@ local M = {}
 ---@class Text
 local text = require("lua.textangle.text")
 
+local function test_get_whitespace_prefix()
+   local input = nil
+   local output = nil
+
+   input = " \t word efe f     fdhf edf"
+   output = text.get_whitespace_prefix(input)
+   assert(type(output) == "string")
+   assert(output == " \t ")
+
+   input = "\ta\t word efe f     fdhf edf"
+   output = text.get_whitespace_prefix(input)
+   assert(type(output) == "string")
+   assert(output == "\t")
+
+   input = "\t\t word efe f     fdhf edf"
+   output = text.get_whitespace_prefix(input)
+   assert(type(output) == "string")
+   assert(output == "\t\t ")
+   input = "     word efe f     fdhf edf"
+   output = text.get_whitespace_prefix(input)
+   assert(type(output) == "string")
+   assert(output == "     ")
+end
+
 local function test_unravel_lines()
    local input = nil
    local output = nil
@@ -81,22 +105,41 @@ local function test_format()
    local hyphenate = false
    local hyphenate_minimum_gap = 10
    local hyphenate_overflow = false
+   local keep_indent = false
    -- Empty input checks.
-   local formatted_text =
-      text.format(input, line_width, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
+   local formatted_text = text.format(
+      input,
+      line_width,
+      hyphenate,
+      hyphenate_minimum_gap,
+      hyphenate_overflow,
+      keep_indent
+   )
    assert(#formatted_text == 1, "Got length " .. #formatted_text)
    assert(type(formatted_text[1]) == "string")
    assert(formatted_text[1] == "")
    input = { "", "   ", "" }
-   formatted_text =
-      text.format(input, line_width, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
+   formatted_text = text.format(
+      input,
+      line_width,
+      hyphenate,
+      hyphenate_minimum_gap,
+      hyphenate_overflow,
+      keep_indent
+   )
    assert(#formatted_text == 1)
    assert(type(formatted_text[1]) == "string")
    assert(formatted_text[1] == "")
 
    input = { "Thisisoneverylongword", "some more words" }
-   formatted_text =
-      text.format(input, line_width, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
+   formatted_text = text.format(
+      input,
+      line_width,
+      hyphenate,
+      hyphenate_minimum_gap,
+      hyphenate_overflow,
+      keep_indent
+   )
    assert(#formatted_text == 4, "Got length " .. #formatted_text)
    assert(formatted_text[1] == "Thisisoneverylongword", "Got " .. formatted_text[1])
    assert(formatted_text[2] == "some")
@@ -106,8 +149,14 @@ local function test_format()
    -- Check hyphenate overflow.
    line_width = 5
    hyphenate_overflow = true
-   formatted_text =
-      text.format(input, line_width, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
+   formatted_text = text.format(
+      input,
+      line_width,
+      hyphenate,
+      hyphenate_minimum_gap,
+      hyphenate_overflow,
+      keep_indent
+   )
    assert(#formatted_text == 8)
    assert(formatted_text[1] == "This-")
    assert(formatted_text[2] == "ison-")
@@ -118,15 +167,82 @@ local function test_format()
    assert(formatted_text[7] == "more")
    assert(formatted_text[8] == "words")
    line_width = 18
-   formatted_text =
-      text.format(input, line_width, hyphenate, hyphenate_minimum_gap, hyphenate_overflow)
+   formatted_text = text.format(
+      input,
+      line_width,
+      hyphenate,
+      hyphenate_minimum_gap,
+      hyphenate_overflow,
+      keep_indent
+   )
    assert(#formatted_text == 3)
    assert(formatted_text[1] == "Thisisoneverylong-")
    assert(formatted_text[2] == "word some more")
    assert(formatted_text[3] == "words")
+
+   -- keep_indent functionality checks.
+   input = { "  Some simple ", "       words" }
+   line_width = 5
+   hyphenate = true
+   hyphenate_minimum_gap = 2
+   hyphenate_overflow = false
+   keep_indent = true
+   formatted_text = text.format(
+      input,
+      line_width,
+      hyphenate,
+      hyphenate_minimum_gap,
+      hyphenate_overflow,
+      keep_indent
+   )
+   assert(#formatted_text == 7, "Got length " .. #formatted_text)
+   assert(formatted_text[1] == "  So-")
+   assert(formatted_text[2] == "  me")
+   assert(formatted_text[3] == "  si-")
+   assert(formatted_text[4] == "  mp-")
+   assert(formatted_text[5] == "  le")
+   assert(formatted_text[6] == "  wo-")
+   assert(formatted_text[7] == "  rds")
+
+   input = { "  Some simpley ", "       words" }
+   line_width = 8
+   hyphenate = true
+   hyphenate_minimum_gap = 2
+   hyphenate_overflow = false
+   keep_indent = true
+   formatted_text = text.format(
+      input,
+      line_width,
+      hyphenate,
+      hyphenate_minimum_gap,
+      hyphenate_overflow,
+      keep_indent
+   )
+   assert(#formatted_text == 4, "Got length " .. #formatted_text)
+   assert(formatted_text[1] == "  Some")
+   assert(formatted_text[2] == "  simpl-")
+   assert(formatted_text[3] == "  ey wo-")
+   assert(formatted_text[4] == "  rds")
+
+   input = { "\t Some simple ", "       words" }
+   line_width = 50
+   hyphenate = true
+   hyphenate_minimum_gap = 2
+   hyphenate_overflow = true
+   formatted_text = text.format(
+      input,
+      line_width,
+      hyphenate,
+      hyphenate_minimum_gap,
+      hyphenate_overflow,
+      keep_indent
+   )
+   assert(#formatted_text == 1)
+   assert(formatted_text[1] == "\t Some simple words")
 end
 
 function M.run()
+   test_get_whitespace_prefix()
    test_unravel_lines()
    test_hyphenise()
    test_format()

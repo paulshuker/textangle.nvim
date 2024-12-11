@@ -14,7 +14,7 @@ end
 ---@return boolean was_called
 local function was_setup_called()
    if vim.g.textangle_all_opts == nil then
-      api.nvim_err_writeln("textangle setup() must be called first")
+      api.nvim_err_writeln("textangle's setup must be called first")
       return false
    end
 
@@ -27,7 +27,8 @@ local function run_format(input_text, all_opts)
       all_opts.line_width,
       all_opts.hyphenate,
       all_opts.hyphenate_minimum_gap,
-      all_opts.hyphenate_overflow
+      all_opts.hyphenate_overflow,
+      all_opts.keep_indent
    )
 end
 
@@ -100,6 +101,12 @@ function M.setup(opts)
    local valid_types, error_message = checker.are_valid_types(opts)
    if not valid_types then
       api.nvim_err_writeln(error_message)
+      return
+   end
+
+   -- Specific checks.
+   if opts.hyphenate and opts.hyphenate_minimum_gap >= opts.line_width then
+      api.nvim_err_writeln("textangle hyphenate_minimum_gap must be < line_width")
       return
    end
 

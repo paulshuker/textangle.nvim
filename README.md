@@ -8,7 +8,7 @@ Works well out-the-box with plain text.
 
 ## Install
 
-Using [lazy.nvim](https://github.com/folke/lazy.nvim),
+With [lazy.nvim](https://github.com/folke/lazy.nvim),
 
 ```lua
 {
@@ -53,13 +53,16 @@ Within the curly brackets, default options can be overwritten. The default optio
    -- Allow words to be hyphenated. A word will be hyphenated if placing the entire word
    -- on the next line leaves a whitespace greater than hyphenate_minimum_gap. The hyphen
    -- is placed at the end of lines.
-   hyphenate = true,
+   hyphenate = false,
    -- See hyphenate.
    hyphenate_minimum_gap = 10,
    -- If a word is longer than line_width, hyphenate it. If false, large words could
    -- overflow.
    hyphenate_overflow = true,
-   -- When disabled, textangle will silently do nothing if called.
+   -- Repeat the indent found on the first line on every line. An indent can be tabs or
+   -- spaces.
+   keep_indent = true,
+   -- When disabled, textangle will silently do nothing whenever called.
    disable = false,
 }
 ```

@@ -12,9 +12,10 @@ function M.get_whitespace_prefix(input_line)
       if char == " " or char == "\t" then
          output = output .. char
       else
-         break
+         return output
       end
    end
+
    return output
 end
 
@@ -68,6 +69,7 @@ function M.hyphenise(input, max_width, first_width)
    line_count = math.max(line_count, 1)
 
    for i = 1, line_count do
+      -- local index_min = math.max((i - 2) * (max_width - 1) + 1, 1)
       local index_min = nil
       local index_max = nil
       local on_first_line = i == 1
@@ -126,23 +128,14 @@ function M.format(
    assert(type(keep_indent) == "boolean")
    -- TODO: Support "keep_prefixes" option for things like repeated single-line code comments.
 
-   local prefix = ""
-   if keep_indent then
-      prefix = M.get_whitespace_prefix(input[1])
-   end
-   line_width = line_width - #prefix
-
    -- Unravel the given text into a single string.
    -- Every word is separated by a single space.
    local unravelled_text = M.unravel_lines(input)
 
    -- Now order the text contents into separate lines.
-   ---@type string[]
    local formatted_text = {}
    local new_line = ""
    for word in string.gmatch(unravelled_text, "%S+") do
-      ::word_start::
-
       -- Check for edge cases first.
       if
          hyphenate
@@ -155,52 +148,37 @@ function M.format(
          for i = 2, #hyphened_word - 1 do
             table.insert(formatted_text, hyphened_word[i])
          end
-         new_line = hyphened_word[#hyphened_word] .. " "
+         new_line = hyphened_word[#hyphened_word]
          goto continue
       end
 
-      local first_word_of_line = #new_line == 0
-
-      if hyphenate_overflow and first_word_of_line and #word > line_width then
+      if hyphenate_overflow and new_line == "" and #word > line_width then
          -- Split the word up between lines using a hyphen.
          local hyphened_word = M.hyphenise(word, line_width)
          for i = 1, #hyphened_word - 1 do
             table.insert(formatted_text, hyphened_word[i])
          end
-         new_line = hyphened_word[#hyphened_word] .. " "
+         new_line = hyphened_word[#hyphened_word]
          goto continue
       end
 
-      first_word_of_line = #new_line == 0
-      local length_required = #word + #new_line
-
-      if first_word_of_line or (length_required <= line_width) then
-         new_line = new_line .. word .. " "
+      local first_word_of_line = #new_line == 0
+      if first_word_of_line then
+         new_line = new_line .. word
          goto continue
+      end
+
+      local length_required = #word + #new_line + 1
+      if length_required <= line_width then
+         new_line = new_line .. " " .. word
       else
-         -- Move to the next line, then the word is checked again from the start of the for loop.
          table.insert(formatted_text, new_line)
-         new_line = ""
-         goto word_start
+         new_line = word
       end
       ::continue::
    end
 
-   if #formatted_text == 0 or new_line ~= "" then
-      table.insert(formatted_text, new_line)
-   end
-
-   -- Remove trailing spaces.
-   for i, formatted_line in ipairs(formatted_text) do
-      if formatted_line:sub(-1) == " " then
-         formatted_text[i] = formatted_line:sub(1, -2)
-      end
-   end
-
-   -- Insert prefix, if there is one, on every formatted line.
-   for i, formatted_line in ipairs(formatted_text) do
-      formatted_text[i] = prefix .. formatted_line
-   end
+   table.insert(formatted_text, new_line)
 
    return formatted_text
 end
