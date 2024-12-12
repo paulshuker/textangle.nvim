@@ -7,7 +7,7 @@ local checker = require("textangle.checker")
 local text = require("textangle.text")
 
 local function is_disabled()
-   return vim.g.disabled == false
+   return vim.g.textangle_all_opts.disable
 end
 
 ---Whether the setup function was called already at least once.
