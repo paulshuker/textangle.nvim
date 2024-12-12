@@ -1,4 +1,4 @@
 [*.lua]
-column_width = 100
+max_line_length = 100
 indent_style = space
 indent_size = 3
