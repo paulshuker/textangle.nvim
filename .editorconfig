@@ -1,4 +1,12 @@
-[*.lua]
+root = true
+
+[*]
+trim_trailing_whitespace = true
+
+[*.md]
+max_line_length = 90
+
+[*.{lua,txt}]
 max_line_length = 100
 indent_style = space
 indent_size = 3

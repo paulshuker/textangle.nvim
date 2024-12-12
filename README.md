@@ -1,10 +1,9 @@
 # textangle.nvim
 
-A customisable neovim plugin to fix line widths to form paragraphs.
+A customisable neovim plugin to fix line widths to form paragraphs built in lua.
 
-Works well out-the-box with plain text.
-
-<!-- It can be [configured](#configuration) to work with single-line code comments. -->
+Neovim's [textwidth](https://neovim.io/doc/user/options.html#'tw') is already great! This
+plugin will give you more control over your text's paragraphs.
 
 ## Install
 
@@ -24,8 +23,8 @@ In `init.lua`, setup textangle.
 require("textangle").setup({})
 ```
 
-Then, format text on the cursor's line by typing `:TextangleLine`. You can also keymap it. For
-example, to `gl`:
+Then, format text on the cursor's line by typing `:TextangleLine`. You can also keymap it.
+For example, to `gl`:
 
 ```lua
 vim.api.nvim_set_keymap("n", "gl", "<cmd>TextangleLine<CR>", { noremap = true })
@@ -48,16 +47,19 @@ Within the curly brackets, default options can be overwritten. The default optio
 
 ```lua
 {
-   -- The maximum allowed width of each line.
-   line_width = 100,
+   -- The maximum width of each line. When set to -1, neovim
+   -- [textwidth](https://neovim.io/doc/user/options.html#'textwidth') is used. See the
+   -- [editorconfig](https://neovim.io/doc/user/editorconfig.html) for ways to configure
+   -- textwidth project-wise.
+   line_width = -1,
    -- Allow words to be hyphenated. A word will be hyphenated if placing the entire word
    -- on the next line leaves a whitespace greater than hyphenate_minimum_gap. The hyphen
    -- is placed at the end of lines.
    hyphenate = false,
    -- See hyphenate.
    hyphenate_minimum_gap = 10,
-   -- If a word is longer than line_width, hyphenate it. If false, large words could
-   -- overflow.
+   -- If a word is longer than line_width, hyphenate it. If false, words longer than
+   -- line_width will overflow.
    hyphenate_overflow = true,
    -- Repeat the indent found on the first line on every line. An indent can be tabs or
    -- spaces.
@@ -69,12 +71,16 @@ Within the curly brackets, default options can be overwritten. The default optio
 
 ## Advanced Configuration
 
-You can call setup multiple times. Each time it is called, all previous options are forgotten. This
-way you can change the paragraph settings at any time.
+You can call setup multiple times. Each time it is called, all previous options are
+forgotten. This way you can change the paragraph settings at any time.
 
-### Change with file type
+### Change settings with file type
 
-You can have different options depending on the file. For example,
+If you just need to change the line_width based on file type, set max_line_length in a
+.editorconfig file in your working directory with textangle linewidth set to -1 (default).
+
+But, if you need finer tuning like hyphenation, use auto commands in your neovim config.
+For example,
 
 ```lua
 -- Python files.
@@ -100,7 +106,7 @@ changing formatting based on the file's full path.
 
 ### "What is a word?"
 
-Words are simply a series of letters/symbols given to textangle. If there were spaces, tabs or a new
-line in between the letters/symbols, then it would be considered two separate words. Hyphens already
-placed by the user in text are preserved.
+Words are simply a series of letters/symbols given to textangle. If there were spaces,
+tabs or a new line in between the letters/symbols, then it would be considered two
+separate words. Hyphens already placed by the user in text are preserved.
 

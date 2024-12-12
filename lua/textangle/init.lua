@@ -22,14 +22,27 @@ local function was_setup_called()
 end
 
 local function run_format(input_text, all_opts)
-   return text.format(
+   local line_width = all_opts.line_width
+   if line_width == -1 then
+      line_width = vim.o.tw
+   end
+   if line_width <= 1 then
+      api.nvim_err_writeln("textangle line_width must be > 1 to format text")
+      return nil
+   end
+   local output_text = text.format(
       input_text,
-      all_opts.line_width,
+      line_width,
       all_opts.hyphenate,
       all_opts.hyphenate_minimum_gap,
       all_opts.hyphenate_overflow,
       all_opts.keep_indent
    )
+   if output_text == input_text then
+      return nil
+   end
+
+   return output_text
 end
 
 ---Run text formatting between the given lines.
@@ -40,21 +53,23 @@ local function format_lines(line_start, line_end)
 
    local output_text = run_format(input_text, vim.g.textangle_all_opts)
 
-   if output_text == input_text then
+   if output_text == nil then
       return
    end
 
    -- Clear the line(s) then insert formatted line(s).
    api.nvim_buf_set_lines(0, line_start, line_end + 1, true, {})
    api.nvim_buf_set_lines(0, line_start, line_start, true, output_text)
+
+   -- TODO: Position the cursor in a consistent manner after formatting text.
 end
 
 ---Format the text on the cursor's line.
 local function format_on_line()
-   if is_disabled() then
+   if not was_setup_called() then
       return
    end
-   if not was_setup_called() then
+   if is_disabled() then
       return
    end
 
@@ -66,10 +81,10 @@ end
 
 ---Run textangle on the selected visual line.
 function M.format_visual_line()
-   if is_disabled() then
+   if not was_setup_called() then
       return
    end
-   if not was_setup_called() then
+   if is_disabled() then
       return
    end
 
@@ -108,13 +123,14 @@ function M.setup(opts)
       return
    end
 
-   -- Specific checks.
-   if opts.hyphenate and opts.hyphenate_minimum_gap >= opts.line_width then
-      api.nvim_err_writeln("textangle hyphenate_minimum_gap must be < line_width")
+   local all_opts = checker.fill_options(opts)
+
+   -- Specific option value checks.
+   if not checker.are_option_values_all_valid(all_opts) then
       return
    end
 
-   vim.g.textangle_all_opts = checker.fill_options(opts)
+   vim.g.textangle_all_opts = all_opts
 
    api.nvim_create_user_command("TextangleLine", format_on_line, {})
 end

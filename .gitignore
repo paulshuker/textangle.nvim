@@ -1,5 +1,7 @@
-# Temporary file
+# Temporary files
 test.txt
+test.py
+test.csv
 
 # Compiled Lua sources
 luac.out

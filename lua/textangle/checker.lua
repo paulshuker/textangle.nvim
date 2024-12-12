@@ -1,6 +1,8 @@
 ---@class Checker
 local M = {}
 
+local api = vim.api
+
 M.OPTION_TYPES = {
    line_width = "number",
    hyphenate = "boolean",
@@ -10,7 +12,7 @@ M.OPTION_TYPES = {
    disable = "boolean",
 }
 M.OPTION_DEFAULTS = {
-   line_width = 100,
+   line_width = -1,
    hyphenate = false,
    hyphenate_minimum_gap = 10,
    hyphenate_overflow = true,
@@ -79,6 +81,19 @@ function M.fill_options(opts)
       output[opt_name] = opt_value
    end
    return output
+end
+
+---Ensure all options are valid values.
+function M.are_option_values_all_valid(opts)
+   if opts.line_width <= 1 and opts.line_width ~= -1 then
+      api.nvim_err_writeln("textangle line_width must be > 1 or equal to -1")
+      return false
+   end
+   if opts.hyphenate and opts.hyphenate_minimum_gap >= opts.line_width then
+      api.nvim_err_writeln("textangle hyphenate_minimum_gap must be < line_width")
+      return false
+   end
+   return true
 end
 
 return M
