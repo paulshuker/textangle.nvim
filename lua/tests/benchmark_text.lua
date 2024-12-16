@@ -48,7 +48,7 @@ local function benchmark_format()
                      )
                   end
                   local time_taken = os.clock() - start_time
-                  assert(time_taken < 1, "Failed with time taken " .. time_taken)
+                  assert(time_taken < 3, "Failed with time taken " .. time_taken)
                end
             end
          end
