@@ -1,8 +1,6 @@
 ---@class Checker
 local M = {}
 
-local api = vim.api
-
 M.OPTION_TYPES = {
    line_width = "number",
    hyphenate = "boolean",
@@ -85,6 +83,8 @@ end
 
 ---Ensure all options are valid values.
 function M.are_option_values_all_valid(opts)
+   local api = vim.api
+
    if opts.line_width <= 1 and opts.line_width ~= -1 then
       api.nvim_err_writeln("textangle line_width must be > 1 or equal to -1")
       return false
