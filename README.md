@@ -43,11 +43,12 @@ vim.api.nvim_set_keymap(
 
 ## Configuration
 
-Within the curly brackets, default options can be overwritten. The default options are:
+During setup, within the curly brackets, any default options can be overwritten. The
+default options are:
 
 ```lua
 {
-   -- The maximum width of each line. When set to -1, neovim
+   -- The maximum width of each line. When set to -1, Neovim's
    -- [textwidth](https://neovim.io/doc/user/options.html#'textwidth') is used. See the
    -- [editorconfig](https://neovim.io/doc/user/editorconfig.html) for ways to configure
    -- textwidth project-wise.
@@ -64,6 +65,10 @@ Within the curly brackets, default options can be overwritten. The default optio
    -- Repeat the indent found on the first line on every line. An indent can be tabs or
    -- spaces.
    keep_indent = true,
+   -- If the first given line contains one of these prefixes (after any optional
+   -- indentation), then the prefix is repeated on every line. This is useful for
+   -- single-line comments. Whitespace must match too. Set to { } to disable.
+   kept_prefixes = { "-- ", "// ", "# " },
    -- When disabled, textangle will silently do nothing whenever called.
    disable = false,
 }
@@ -76,8 +81,9 @@ forgotten. This way you can change the paragraph settings at any time.
 
 ### Change settings with file type
 
-If you just need to change the line_width based on file type, set max_line_length in a
-.editorconfig file in your working directory with textangle linewidth set to -1 (default).
+If you just need to change the line_width based on file type, set `max_line_length` in a
+[.editorconfig](https://neovim.io/doc/user/editorconfig.html) file in your working
+directory with textangle linewidth set to -1 (default).
 
 But, if you need finer tuning like hyphenation, use auto commands in your neovim config.
 For example,
@@ -101,8 +107,8 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 -- Add more file types here.
 ```
 
-See [neovim](https://neovim.io/doc/user/autocmd.html) for more details on auto commands, like
-changing formatting based on the file's full path.
+See [autocmd](https://neovim.io/doc/user/autocmd.html) for more details on auto commands,
+like changing formatting based on the file's full path.
 
 ### "What is a word?"
 

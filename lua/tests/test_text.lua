@@ -28,6 +28,41 @@ local function test_get_whitespace_prefix()
    assert(output == "     ")
 end
 
+local function test_clear_whitespace_prefixes()
+   local input = nil
+   local output = nil
+
+   input = { "     ", "    dwdw" }
+   output = text.clear_whitespace_prefixes(input)
+   assert(type(output) == "table")
+   assert(#output == 2)
+   assert(output[1] == "")
+   assert(output[2] == "dwdw")
+
+   input = { "  Some simple ", "       words" }
+   output = text.clear_whitespace_prefixes(input)
+   assert(type(output) == "table")
+   assert(#output == 2)
+   assert(output[1] == "Some simple ")
+   assert(output[2] == "words")
+end
+
+local function test_get_prefix()
+   local input_line = nil
+   local prefixes = nil
+   local output = nil
+
+   input_line = ""
+   prefixes = {}
+   output = text.get_prefix(input_line, prefixes)
+   assert(output == "")
+
+   input_line = "The prefix  some words"
+   prefixes = { " e-fef ", "d", "The prefix " }
+   output = text.get_prefix(input_line, prefixes)
+   assert(output == "The prefix ")
+end
+
 local function test_unravel_lines()
    local input = nil
    local output = nil
@@ -106,6 +141,7 @@ local function test_format()
    local hyphenate_minimum_gap = 10
    local hyphenate_overflow = false
    local keep_indent = false
+   local keep_prefixes = {}
    -- Empty input checks.
    local formatted_text = text.format(
       input,
@@ -113,7 +149,8 @@ local function test_format()
       hyphenate,
       hyphenate_minimum_gap,
       hyphenate_overflow,
-      keep_indent
+      keep_indent,
+      keep_prefixes
    )
    assert(#formatted_text == 1, "Got length " .. #formatted_text)
    assert(type(formatted_text[1]) == "string")
@@ -125,7 +162,8 @@ local function test_format()
       hyphenate,
       hyphenate_minimum_gap,
       hyphenate_overflow,
-      keep_indent
+      keep_indent,
+      keep_prefixes
    )
    assert(#formatted_text == 1)
    assert(type(formatted_text[1]) == "string")
@@ -138,7 +176,8 @@ local function test_format()
       hyphenate,
       hyphenate_minimum_gap,
       hyphenate_overflow,
-      keep_indent
+      keep_indent,
+      keep_prefixes
    )
    assert(#formatted_text == 4, "Got length " .. #formatted_text)
    assert(formatted_text[1] == "Thisisoneverylongword", "Got " .. formatted_text[1])
@@ -155,7 +194,8 @@ local function test_format()
       hyphenate,
       hyphenate_minimum_gap,
       hyphenate_overflow,
-      keep_indent
+      keep_indent,
+      keep_prefixes
    )
    assert(#formatted_text == 8)
    assert(formatted_text[1] == "This-")
@@ -173,7 +213,8 @@ local function test_format()
       hyphenate,
       hyphenate_minimum_gap,
       hyphenate_overflow,
-      keep_indent
+      keep_indent,
+      keep_prefixes
    )
    assert(#formatted_text == 3)
    assert(formatted_text[1] == "Thisisoneverylong-")
@@ -193,7 +234,8 @@ local function test_format()
       hyphenate,
       hyphenate_minimum_gap,
       hyphenate_overflow,
-      keep_indent
+      keep_indent,
+      keep_prefixes
    )
    assert(#formatted_text == 7, "Got length " .. #formatted_text)
    assert(formatted_text[1] == "  So-")
@@ -216,7 +258,8 @@ local function test_format()
       hyphenate,
       hyphenate_minimum_gap,
       hyphenate_overflow,
-      keep_indent
+      keep_indent,
+      keep_prefixes
    )
    assert(#formatted_text == 4, "Got length " .. #formatted_text)
    assert(formatted_text[1] == "  Some")
@@ -224,7 +267,7 @@ local function test_format()
    assert(formatted_text[3] == "  ey wo-")
    assert(formatted_text[4] == "  rds")
 
-   input = { "\t Some simple ", "       words" }
+   input = { "  Some simple ", "       words" }
    line_width = 50
    hyphenate = true
    hyphenate_minimum_gap = 2
@@ -235,14 +278,55 @@ local function test_format()
       hyphenate,
       hyphenate_minimum_gap,
       hyphenate_overflow,
-      keep_indent
+      keep_indent,
+      keep_prefixes
    )
    assert(#formatted_text == 1)
-   assert(formatted_text[1] == "\t Some simple words")
+   assert(formatted_text[1] == "  Some simple words")
+
+   keep_prefixes = { "# ", "-- ", "Some ", "simple" }
+   keep_indent = true
+   line_width = 10
+   hyphenate = false
+   hyphenate_overflow = false
+   formatted_text = text.format(
+      input,
+      line_width,
+      hyphenate,
+      hyphenate_minimum_gap,
+      hyphenate_overflow,
+      keep_indent,
+      keep_prefixes
+   )
+   assert(#formatted_text == 2, "Got length " .. #formatted_text)
+   assert(formatted_text[1] == "  Some simple")
+   assert(formatted_text[2] == "  Some words")
+
+   keep_prefixes = { "# ", "-- ", "Some ", "simple" }
+   line_width = 10
+   hyphenate = false
+   hyphenate_overflow = true
+   formatted_text = text.format(
+      input,
+      line_width,
+      hyphenate,
+      hyphenate_minimum_gap,
+      hyphenate_overflow,
+      keep_indent,
+      keep_prefixes
+   )
+   assert(#formatted_text == 5, "Got length " .. #formatted_text)
+   assert(formatted_text[1] == "  Some si-")
+   assert(formatted_text[2] == "  Some mp-")
+   assert(formatted_text[3] == "  Some le")
+   assert(formatted_text[4] == "  Some wo-")
+   assert(formatted_text[5] == "  Some rds")
 end
 
 function M.run()
    test_get_whitespace_prefix()
+   test_clear_whitespace_prefixes()
+   test_get_prefix()
    test_unravel_lines()
    test_hyphenise()
    test_format()

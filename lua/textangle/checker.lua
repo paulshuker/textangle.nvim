@@ -7,6 +7,7 @@ M.OPTION_TYPES = {
    hyphenate_minimum_gap = "number",
    hyphenate_overflow = "boolean",
    keep_indent = "boolean",
+   keep_prefixes = "table",
    disable = "boolean",
 }
 M.OPTION_DEFAULTS = {
@@ -15,6 +16,7 @@ M.OPTION_DEFAULTS = {
    hyphenate_minimum_gap = 10,
    hyphenate_overflow = true,
    keep_indent = true,
+   keep_prefixes = { "-- ", "// ", "# " },
    disable = false,
 }
 

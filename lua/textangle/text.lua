@@ -18,6 +18,45 @@ function M.get_whitespace_prefix(input_line)
    return output
 end
 
+---Clear all whitespace prefixes from all strings.
+---@param input string[] The given lines of text.
+---@return string[] output Removed whitespace prefix text copy.
+function M.clear_whitespace_prefixes(input)
+   local output = {}
+
+   for line_i, input_line in ipairs(input) do
+      output[line_i] = ""
+      for char_i = 1, #input_line do
+         local char = input_line:sub(char_i, char_i)
+         if char == " " or char == "\t" then
+            goto next_char
+         else
+            output[line_i] = input_line:sub(char_i - #input_line - 1)
+            goto next_line
+         end
+         ::next_char::
+      end
+      ::next_line::
+   end
+
+   return output
+end
+
+---Find any prefix at the start of the given line.
+---@param input_line string The given text.
+---@param prefixes string[] Valid prefixes.
+---@return string found_prefix The found prefix. If no prefix is matched, then an empty string is
+---   returned.
+function M.get_prefix(input_line, prefixes)
+   for _, prefix in ipairs(prefixes) do
+      if string.sub(input_line, 1, #prefix) == prefix then
+         return prefix
+      end
+   end
+
+   return ""
+end
+
 ---Unravel lines of text into one string.
 -- All lines of text are appended together, preserving their order in the input array. Each phrase
 -- is separated by a single whitespace.
@@ -115,7 +154,8 @@ function M.format(
    hyphenate,
    hyphenate_minimum_gap,
    hyphenate_overflow,
-   keep_indent
+   keep_indent,
+   keep_prefixes
 )
    assert(type(input) == "table")
    assert(#input > 0)
@@ -124,13 +164,29 @@ function M.format(
    assert(type(hyphenate_minimum_gap) == "number")
    assert(type(hyphenate_overflow) == "boolean")
    assert(type(keep_indent) == "boolean")
-   -- TODO: Support "keep_prefixes" option for things like repeated single-line code comments.
+   assert(type(keep_prefixes) == "table")
 
    local prefix = ""
    if keep_indent then
       prefix = M.get_whitespace_prefix(input[1])
    end
+
+   input = M.clear_whitespace_prefixes(input)
+
+   local first_line = input[1]
+   local keep_prefix = M.get_prefix(first_line, keep_prefixes)
+   prefix = prefix .. keep_prefix
+   -- Remove kept prefixes while formatting. It will be re-added later.
+   for line_index, input_line in ipairs(input) do
+      if string.sub(input_line, 1, #keep_prefix) == keep_prefix then
+         input[line_index] = string.sub(input_line, -(#input_line - #keep_prefix))
+      end
+   end
+
    line_width = line_width - #prefix
+
+   local err_msg = 'Prefix "' .. prefix .. '" too long for line_width ' .. line_width + #prefix
+   assert(line_width > 1, err_msg)
 
    -- Unravel the given text into a single string.
    -- Every word is separated by a single space.

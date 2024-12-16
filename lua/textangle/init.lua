@@ -36,7 +36,8 @@ local function run_format(input_text, all_opts)
       all_opts.hyphenate,
       all_opts.hyphenate_minimum_gap,
       all_opts.hyphenate_overflow,
-      all_opts.keep_indent
+      all_opts.keep_indent,
+      all_opts.keep_prefixes
    )
    if output_text == input_text then
       return nil
@@ -101,6 +102,8 @@ function M.format_visual_line()
    end
 
    format_lines(start_line, end_line)
+
+   -- TODO: Exit visual line mode after formatting.
 end
 
 ---Setup textangle.
