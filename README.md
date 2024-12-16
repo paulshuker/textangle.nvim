@@ -3,7 +3,8 @@
 A customisable neovim plugin to fix line widths to form paragraphs built in lua.
 
 Neovim's [textwidth](https://neovim.io/doc/user/options.html#'tw') is already great! This
-plugin will give you more control over your text's paragraphs.
+plugin will give you slightly more control over your paragraphs. Textangle does not rely
+on the LSP. But, it can still reformat single-line code comments.
 
 ## Install
 
@@ -30,7 +31,7 @@ For example, to `gl`:
 vim.api.nvim_set_keymap("n", "gl", "<cmd>TextangleLine<CR>", { noremap = true })
 ```
 
-You can format text using visual line mode, like by typing `gk`:
+You can format text using visual line mode, I set it to key map `gk`:
 
 ```lua
 vim.api.nvim_set_keymap(
