@@ -3,7 +3,7 @@ M = {}
 ---@class Text
 local text = require("lua.textangle.text")
 
-local ITERATIONS = 100000
+local ITERATIONS = 20000
 local INPUT = {
    " \t  Lots of words!    And such ",
    " sdsd ",
@@ -48,7 +48,7 @@ local function benchmark_format()
                      )
                   end
                   local time_taken = os.clock() - start_time
-                  assert(time_taken < 5, "Failed with time taken " .. time_taken)
+                  assert(time_taken < 1, "Failed with time taken " .. time_taken)
                end
             end
          end
