@@ -1,10 +1,14 @@
 # textangle.nvim
 
-A customisable neovim plugin to fix line widths to form paragraphs built in lua.
+![](https://img.shields.io/github/check-runs/paulshuker/textangle.nvim/main?logo=github&logoColor=white&label=Tests)
+![](https://img.shields.io/badge/Lua-%252357A143?logo=lua&logoColor=white&labelColor=%232C2D72&color=%232C2D72)
+[![](https://img.shields.io/badge/Neovim-%252357A143?logo=neovim&logoColor=white&labelColor=%2300563B&color=%2300563B)](https://neovim.io/)
 
-Neovim's [textwidth](https://neovim.io/doc/user/options.html#'tw') is already great! This
-plugin will give you slightly more control over your paragraphs. Textangle does not rely
-on the LSP. But, it can still reformat single-line code comments.
+A customisable neovim plugin to fix line widths and form paragraphs.
+
+Neovim's [textwidth](https://neovim.io/doc/user/options.html#'textwidth') is already
+great! This plugin will give you slightly more control over paragraphs. Textangle does not
+rely on the LSP. But, it can still reformat single-line code comments.
 
 ## Install
 
@@ -84,7 +88,7 @@ forgotten. This way you can change the paragraph settings at any time.
 
 If you just need to change the line_width based on file type, set `max_line_length` in a
 [.editorconfig](https://neovim.io/doc/user/editorconfig.html) file in your working
-directory with textangle linewidth set to -1 (default).
+directory and set textangle linewidth to -1 (default).
 
 But, if you need finer tuning like hyphenation, use auto commands in your neovim config.
 For example,
