@@ -1,7 +1,7 @@
 # textangle.nvim
 
-![](https://img.shields.io/github/check-runs/paulshuker/textangle.nvim/main?logo=github&logoColor=white&label=Tests)
-![](https://img.shields.io/badge/Lua-%252357A143?logo=lua&logoColor=white&labelColor=%232C2D72&color=%232C2D72)
+[![](https://img.shields.io/github/check-runs/paulshuker/textangle.nvim/main?logo=github&logoColor=white&label=Tests)]()
+[![](https://img.shields.io/badge/Lua-%252357A143?logo=lua&logoColor=white&labelColor=%232C2D72&color=%232C2D72)](https://www.lua.org/)
 [![](https://img.shields.io/badge/Neovim-%252357A143?logo=neovim&logoColor=white&labelColor=%2300563B&color=%2300563B)](https://neovim.io/)
 
 A customisable neovim plugin to fix line widths and form paragraphs.
@@ -58,6 +58,12 @@ default options are:
    -- [editorconfig](https://neovim.io/doc/user/editorconfig.html) for ways to configure
    -- textwidth project-wise.
    line_width = -1,
+   -- Repeat the indent found on the first line on every line.
+   keep_indent = true,
+   -- If the first given line contains one of these prefixes (after any optional
+   -- indentation), then the prefix is repeated on every line. This is useful for
+   -- single-line comments. Whitespace must match too. Set to { } to disable.
+   kept_prefixes = { "-- ", "// ", "# " },
    -- Allow words to be hyphenated. A word will be hyphenated if placing the entire word
    -- on the next line leaves a whitespace greater than hyphenate_minimum_gap. The hyphen
    -- is placed at the end of lines.
@@ -67,13 +73,6 @@ default options are:
    -- If a word is longer than line_width, hyphenate it. If false, words longer than
    -- line_width will overflow.
    hyphenate_overflow = true,
-   -- Repeat the indent found on the first line on every line. An indent can be tabs or
-   -- spaces.
-   keep_indent = true,
-   -- If the first given line contains one of these prefixes (after any optional
-   -- indentation), then the prefix is repeated on every line. This is useful for
-   -- single-line comments. Whitespace must match too. Set to { } to disable.
-   kept_prefixes = { "-- ", "// ", "# " },
    -- When disabled, textangle will silently do nothing whenever called.
    disable = false,
 }

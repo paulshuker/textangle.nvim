@@ -3,11 +3,11 @@ local M = {}
 
 M.OPTION_TYPES = {
    line_width = "number",
+   keep_indent = "boolean",
+   keep_prefixes = "table",
    hyphenate = "boolean",
    hyphenate_minimum_gap = "number",
    hyphenate_overflow = "boolean",
-   keep_indent = "boolean",
-   keep_prefixes = "table",
    disable = "boolean",
 }
 M.OPTION_DEFAULTS = {
