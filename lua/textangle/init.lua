@@ -106,7 +106,10 @@ function M.format_visual_line()
 
    format_lines(start_line, end_line)
 
-   -- TODO: Exit visual line mode after formatting.
+   -- Exit visual line mode.
+   -- nvim_feedkeys is used because it is a blocking call.
+   local escape = api.nvim_replace_termcodes("<Esc>", true, false, true)
+   api.nvim_feedkeys(escape, "x", false)
 end
 
 ---Setup textangle.
