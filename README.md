@@ -4,11 +4,14 @@
 [![](https://img.shields.io/badge/Lua-%252357A143?logo=lua&logoColor=white&labelColor=%232C2D72&color=%232C2D72)](https://www.lua.org/)
 [![](https://img.shields.io/badge/Neovim-%252357A143?logo=neovim&logoColor=white&labelColor=%2300563B&color=%2300563B)](https://neovim.io/)
 
+![Gif not found](example.gif)
+
 A customisable neovim plugin to fix line widths and form paragraphs.
 
 Neovim's [textwidth](https://neovim.io/doc/user/options.html#'textwidth') is already
-great! This plugin will give you slightly more control over paragraphs. Textangle does not
-rely on the LSP. But, it can still reformat single-line code comments.
+great! But, I find that [`gq`](https://neovim.io/doc/user/change.html#gq) has some
+shortcomings. This plugin will give you more control over paragraphs. Textangle does not
+rely on the LSP (it is stand-alone). But, it can still reformat single-line code comments.
 
 ## Install
 
