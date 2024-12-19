@@ -38,7 +38,7 @@ For example, to `gl`:
 vim.api.nvim_set_keymap("n", "gl", "<cmd>TextangleLine<CR>", { noremap = true })
 ```
 
-You can format text using visual line mode, I set it to key map `gk`:
+You can format text using visual line mode, I set it to keymap `gk`:
 
 ```lua
 vim.api.nvim_set_keymap(
@@ -66,7 +66,7 @@ default options are:
    -- If the first given line contains one of these prefixes (after any optional
    -- indentation), then the prefix is repeated on every line. This is useful for
    -- single-line comments. Whitespace must match too. Set to { } to disable.
-   kept_prefixes = { "-- ", "// ", "# " },
+   keep_prefixes = { "-- ", "// ", "# " },
    -- Allow words to be hyphenated. A word will be hyphenated if placing the entire word
    -- on the next line leaves a whitespace greater than hyphenate_minimum_gap. The hyphen
    -- is placed at the end of lines.

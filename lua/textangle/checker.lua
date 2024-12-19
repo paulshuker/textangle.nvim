@@ -12,11 +12,11 @@ M.OPTION_TYPES = {
 }
 M.OPTION_DEFAULTS = {
    line_width = -1,
+   keep_indent = true,
+   keep_prefixes = { "-- ", "// ", "# " },
    hyphenate = false,
    hyphenate_minimum_gap = 10,
    hyphenate_overflow = true,
-   keep_indent = true,
-   keep_prefixes = { "-- ", "// ", "# " },
    disable = false,
 }
 
