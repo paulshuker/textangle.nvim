@@ -58,14 +58,15 @@ local function format_lines(line_start, line_end)
       return
    end
 
-   local _, col = unpack(vim.api.nvim_win_get_cursor(0))
+   local _, col = unpack(api.nvim_win_get_cursor(0))
 
    -- Clear the line(s) then insert formatted line(s).
    api.nvim_buf_set_lines(0, line_start, line_end + 1, true, {})
    api.nvim_buf_set_lines(0, line_start, line_start, true, output_text)
 
    -- Position the cursor consistently after formatting text.
-   api.nvim_win_set_cursor(0, { line_start + #output_text + 1, col })
+   local row_count = api.nvim_buf_line_count(0)
+   api.nvim_win_set_cursor(0, { math.min(line_start + #output_text + 1, row_count), col })
 end
 
 ---Format the text on the cursor's line.
