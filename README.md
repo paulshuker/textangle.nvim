@@ -15,6 +15,8 @@ rely on the LSP (it is stand-alone). But, it can still reformat single-line code
 
 ## Install
 
+Neovim >= 0.5.0 is required.
+
 With [lazy.nvim](https://github.com/folke/lazy.nvim),
 
 ```lua
