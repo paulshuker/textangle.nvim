@@ -22,6 +22,8 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim),
 ```lua
 {
    "paulshuker/textangle.nvim",
+   -- Use only releases (optional).
+   version = "*",
 }
 ```
 
@@ -33,8 +35,9 @@ In `init.lua`, setup textangle.
 require("textangle").setup({})
 ```
 
-Then, format text on the cursor's line by typing `:TextangleLine`. You can also keymap it.
-For example, to `gl`:
+Then, format text on the cursor's line by typing `:TextangleLine`.
+
+You can also keymap it. For example, to `gl`:
 
 ```lua
 vim.api.nvim_set_keymap("n", "gl", "<cmd>TextangleLine<CR>", { noremap = true })
